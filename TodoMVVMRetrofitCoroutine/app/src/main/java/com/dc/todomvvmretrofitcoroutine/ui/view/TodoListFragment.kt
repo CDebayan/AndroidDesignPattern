@@ -6,14 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.dc.todomvvmretrofitcoroutine.ui.adapter.TodoListAdapter
+import com.dc.todomvvmretrofitcoroutine.R
 import com.dc.todomvvmretrofitcoroutine.data.model.ChildViewModel
 import com.dc.todomvvmretrofitcoroutine.data.model.TodoModel
 import com.dc.todomvvmretrofitcoroutine.data.network.RetrofitClient
 import com.dc.todomvvmretrofitcoroutine.data.repository.TodoRepository
-import com.dc.todomvvmretrofitcoroutine.ui.viewmodel.TodoListViewModel
-import com.dc.todomvvmretrofitcoroutine.R
 import com.dc.todomvvmretrofitcoroutine.databinding.FragmentTodoListBinding
+import com.dc.todomvvmretrofitcoroutine.ui.adapter.TodoListAdapter
+import com.dc.todomvvmretrofitcoroutine.ui.viewmodel.TodoListViewModel
 import com.dc.todomvvmretrofitcoroutine.utils.*
 
 class TodoListFragment : BaseFragment() {
@@ -24,7 +24,7 @@ class TodoListFragment : BaseFragment() {
         ViewModelProvider(
             this,
             TodoListViewModel.ViewModelFactory(
-                TodoRepository(
+                TodoRepository.instance(
                     RetrofitClient.invokeWithAuth(
                         requireContext()
                     )
@@ -48,6 +48,7 @@ class TodoListFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         onClickListener()
         observers()
     }
@@ -59,13 +60,16 @@ class TodoListFragment : BaseFragment() {
         binding.addButton.setOnClickListener {
             val bundle = Bundle()
             bundle.putString("type", "add")
-            requireActivity().nextFragment(R.id.action_todoListFragment_to_addTodoFragment,bundle = bundle)
+            requireActivity().nextFragment(
+                R.id.action_todoListFragment_to_addTodoFragment,
+                bundle = bundle
+            )
         }
 
     }
 
     private fun observers() {
-        sharedViewModel.todoList.observe(viewLifecycleOwner, {
+        viewModel.todoList.observe(viewLifecycleOwner, {
             setRecyclerView(it)
         })
         viewModel.todoListState.observe(viewLifecycleOwner, { state ->
@@ -76,10 +80,7 @@ class TodoListFragment : BaseFragment() {
                     binding.placeholder.text = state.message
                 }
                 is GeneralState.Success -> {
-                    state.data?.let {
-                        showHideViews(showRecycler = true)
-                        sharedViewModel.addTodoList(it)
-                    }
+                    showHideViews(showRecycler = true)
                 }
             }
         })
@@ -93,7 +94,7 @@ class TodoListFragment : BaseFragment() {
                     deleteTodo(todoList[position].todoId)
 
                 } else if (option == "update") {
-                     updateTodo(todoList[position])
+                    updateTodo(todoList[position])
                 }
             }
         })
@@ -103,7 +104,10 @@ class TodoListFragment : BaseFragment() {
         val bundle = Bundle()
         bundle.putString("type", "update")
         bundle.putParcelable("todoData", todoModel)
-        requireActivity().nextFragment(R.id.action_todoListFragment_to_addTodoFragment,bundle = bundle)
+        requireActivity().nextFragment(
+            R.id.action_todoListFragment_to_addTodoFragment,
+            bundle = bundle
+        )
     }
 
     private fun deleteTodo(todoId: Int?) {
@@ -118,7 +122,6 @@ class TodoListFragment : BaseFragment() {
                     is GeneralState.Success -> {
                         showHideViews(showLoader = false, showRecycler = true)
                         showToast(state.message)
-                        sharedViewModel.deleteTodo(todoId)
                     }
                 }
             })

@@ -1,98 +1,45 @@
-package com.dc.todomvvmretrofitcoroutine.ui.view
+package com.dc.todomvvmretrofit.ui.view
 
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
-import com.dc.todomvvmretrofitcoroutine.R
-import com.dc.todomvvmretrofitcoroutine.data.model.ChildViewModel
-import com.dc.todomvvmretrofitcoroutine.data.model.TodoModel
-import com.dc.todomvvmretrofitcoroutine.data.network.RetrofitClient
-import com.dc.todomvvmretrofitcoroutine.data.repository.TodoRepository
-import com.dc.todomvvmretrofitcoroutine.databinding.FragmentAddUpdateTodoBinding
-import com.dc.todomvvmretrofitcoroutine.ui.viewmodel.AddUpdateTodoViewModel
-import com.dc.todomvvmretrofitcoroutine.utils.*
-import com.dc.todomvvmretrofitcoroutine.utils.custombottomsheet.BottomSheetModel
-import com.dc.todomvvmretrofitcoroutine.utils.custombottomsheet.CustomBottomSheet
+import com.dc.todomvvmretrofit.R
+import com.dc.todomvvmretrofit.utils.custombottomsheet.BottomSheetModel
+import com.dc.todomvvmretrofit.utils.custombottomsheet.CustomBottomSheet
+import com.dc.todomvvmretrofit.databinding.ActivityAddUpdateBinding
+import com.dc.todomvvmretrofit.data.model.TodoModel
+import com.dc.todomvvmretrofit.ui.viewmodel.AddUpdateTodoViewModel
+import com.dc.todomvvmretrofit.utils.*
 import java.util.*
 
-class AddUpdateTodoFragment : BaseFragment() {
+class AddUpdateActivity : BaseActivity() {
 
-    private var type: String? = ""
     private var todoId: Int? = null
-    private lateinit var binding: FragmentAddUpdateTodoBinding
+    private var type: String? = ""
     private var selectedPriority: String = ""
     private var selectedDateTime: String = ""
-
-    private val viewModel: AddUpdateTodoViewModel by lazy {
-        ViewModelProvider(
-            this,
-            AddUpdateTodoViewModel.ViewModelFactory(
-                TodoRepository.instance(RetrofitClient.invokeWithAuth(
-                    requireContext())
-                )
-            )
-        ).get(AddUpdateTodoViewModel::class.java)
-    }
+    private lateinit var addUpdateTodoViewModel: AddUpdateTodoViewModel
+    private lateinit var binding: ActivityAddUpdateBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = ActivityAddUpdateBinding.inflate(layoutInflater)
+        addUpdateTodoViewModel = ViewModelProvider(this).get(AddUpdateTodoViewModel::class.java)
 
-        type = arguments?.getString("type")
-    }
+        getIntentData()
 
-    override fun getChildView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): ChildViewModel {
-        binding = FragmentAddUpdateTodoBinding.inflate(inflater, container, false)
-        return when (type) {
-            "add" -> {
-                ChildViewModel(
-                    view = binding.root,
-                    title = "Add Todo",
-                    showBack = true
-                )
-            }
-            "update" -> {
-                ChildViewModel(
-                    view = binding.root,
-                    title = "Update Todo",
-                    showBack = true
-                )
-            }
-            else -> {
-                ChildViewModel(
-                    view = binding.root,
-                    title = "",
-                    showBack = true
-                )
-            }
-        }
-
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        setDataToFields(arguments?.getParcelable("todoData"))
-        setViews()
         onClickListener()
     }
 
-    @SuppressLint("SetTextI18n")
-    private fun setViews() {
-        type?.let {
-            if (it == "add") {
-                binding.addUpdateButton.text = "Add"
-            } else if (it == "update") {
-                binding.addUpdateButton.text = "Update"
-            }
+    private fun getIntentData() {
+        if (intent.hasExtra("bundleData")) {
+            val bundleExtra: Bundle? = intent.getBundleExtra("bundleData")
+            type = bundleExtra?.getString("type", "")
+            val todoData: TodoModel? = bundleExtra?.getParcelable("todoData")
+            setViews()
+            setDataToFields(todoData)
         }
     }
 
@@ -114,6 +61,19 @@ class AddUpdateTodoFragment : BaseFragment() {
             it.priority?.let { priority ->
                 selectedPriority = priority
                 binding.priority.setText(priority)
+            }
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun setViews() {
+        type?.let {
+            if (it == "add") {
+                setBaseView(binding.root, title = "Add Todo", showBack = true)
+                binding.addUpdateButton.text = "Add"
+            } else if (it == "update") {
+                setBaseView(binding.root, title = "Update Todo", showBack = true)
+                binding.addUpdateButton.text = "Update"
             }
         }
     }
@@ -171,49 +131,49 @@ class AddUpdateTodoFragment : BaseFragment() {
         val priority: String = selectedPriority
 
         if (type == "add") {
-            viewModel.addTodo(
+            addUpdateTodoViewModel.addTodo(
                 title = title,
                 description = description,
                 dateTime = dateTime,
                 priority = priority
-            ).observe(viewLifecycleOwner, ::handleState)
+            ).observe(this,::handleState)
         } else if (type == "update") {
             todoId?.let {
-                viewModel.updateTodo(
+                addUpdateTodoViewModel.updateTodo(
                     todoId = it,
                     title = title,
                     description = description,
                     dateTime = dateTime,
                     priority = priority
-                ).observe(viewLifecycleOwner, ::handleState)
+                ).observe(this,::handleState)
             }
         }
     }
 
-    private fun handleState(state: AddUpdateTodoViewModel.State) {
-        when (state) {
-            is AddUpdateTodoViewModel.State.Loading -> setLoading(true)
-            is AddUpdateTodoViewModel.State.Error -> {
+    private fun handleState(state : AddUpdateTodoViewModel.AddUpdateTodoState){
+        when(state){
+            is AddUpdateTodoViewModel.AddUpdateTodoState.Loading -> setLoading(true)
+            is AddUpdateTodoViewModel.AddUpdateTodoState.Error ->{
                 setLoading(false)
                 showToast(state.message)
             }
-            is AddUpdateTodoViewModel.State.ValidationError -> {
+            is AddUpdateTodoViewModel.AddUpdateTodoState.ValidationError ->{
                 setLoading(false)
                 binding.titleLayout.error = state.titleError
                 binding.descriptionLayout.error = state.descriptionError
                 binding.datetimeLayout.error = state.dateTimeError
                 binding.priorityLayout.error = state.priorityError
             }
-            is AddUpdateTodoViewModel.State.Success -> {
+            is AddUpdateTodoViewModel.AddUpdateTodoState.Success ->{
                 setLoading(false)
                 showToast(state.message)
-                requireActivity().popFragment()
+                onBackPressed()
             }
         }
     }
 
     private fun setLoading(isLoading: Boolean) {
-        if (isLoading) {
+        if (isLoading){
             binding.titleLayout.disable()
             binding.descriptionLayout.disable()
             binding.datetimeLayout.disable()
@@ -222,7 +182,7 @@ class AddUpdateTodoFragment : BaseFragment() {
             binding.addUpdateButton.disable()
             binding.addUpdateButton.invisible()
 
-        } else {
+        }else{
             binding.titleLayout.enable()
             binding.descriptionLayout.enable()
             binding.datetimeLayout.enable()
@@ -241,8 +201,8 @@ class AddUpdateTodoFragment : BaseFragment() {
         val startHour = currentDateTime.get(Calendar.HOUR_OF_DAY)
         val startMinute = currentDateTime.get(Calendar.MINUTE)
 
-        DatePickerDialog(requireContext(), { _, year, month, day ->
-            TimePickerDialog(requireContext(), { _, hour, minute ->
+        DatePickerDialog(this, { _, year, month, day ->
+            TimePickerDialog(this, { _, hour, minute ->
                 val pickedDateTime = Calendar.getInstance()
                 pickedDateTime.set(year, month, day, hour, minute)
                 setDateTime(pickedDateTime)
@@ -262,7 +222,7 @@ class AddUpdateTodoFragment : BaseFragment() {
         list.add(BottomSheetModel(R.drawable.ic_circle_yellow, "Medium"))
         list.add(BottomSheetModel(R.drawable.ic_circle_green, "Low"))
 
-        CustomBottomSheet(requireContext(), list).setOnClickListener(object :
+        CustomBottomSheet(this, list).setOnClickListener(object :
             CustomBottomSheet.BottomSheetClickListener {
             override fun onClick(model: BottomSheetModel) {
                 selectedPriority = model.name
@@ -270,6 +230,4 @@ class AddUpdateTodoFragment : BaseFragment() {
             }
         }).show()
     }
-
-
 }

@@ -5,22 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
-import com.dc.todomvvmretrofitcoroutine.data.model.ChildViewModel
-import com.dc.todomvvmretrofitcoroutine.ui.viewmodel.SharedViewModel
 import com.dc.todomvvmretrofitcoroutine.R
+import com.dc.todomvvmretrofitcoroutine.data.model.ChildViewModel
 import com.dc.todomvvmretrofitcoroutine.databinding.FragmentBaseBinding
 import com.dc.todomvvmretrofitcoroutine.utils.*
 
 abstract class BaseFragment : Fragment() {
 
     private lateinit var baseBinding: FragmentBaseBinding
-
-    val sharedViewModel: SharedViewModel by lazy {
-        ViewModelProvider(
-            requireActivity(),
-        ).get(SharedViewModel::class.java)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

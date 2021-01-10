@@ -10,9 +10,9 @@ import kotlinx.coroutines.launch
 
 class TodoListViewModel(private val repository: TodoRepository) : ViewModel() {
 
-    private var _todoList: ArrayList<TodoModel> = ArrayList()
     private val _todoListState: MutableLiveData<GeneralState<List<TodoModel>>> = MutableLiveData()
     val todoListState get() = _todoListState
+    val todoList get() = repository.todoList
 
     init {
         viewModelScope.launch(IO) {
@@ -24,8 +24,7 @@ class TodoListViewModel(private val repository: TodoRepository) : ViewModel() {
         _todoListState.postValue(GeneralState.Loading)
         val response = repository.todoList()
         if (response.status == 1) {
-            _todoList = response.data as ArrayList<TodoModel>
-            _todoListState.postValue(GeneralState.Success(data = _todoList))
+            _todoListState.postValue(GeneralState.Success(data = null))
         } else {
             _todoListState.postValue(
                 GeneralState.Error(
