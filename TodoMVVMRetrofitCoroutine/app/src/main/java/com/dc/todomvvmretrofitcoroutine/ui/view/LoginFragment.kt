@@ -8,11 +8,11 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.dc.todomvvmretrofitcoroutine.R
 import com.dc.todomvvmretrofitcoroutine.data.network.RetrofitClient
 import com.dc.todomvvmretrofitcoroutine.data.repository.LoginRepository
-import com.dc.todomvvmretrofitcoroutine.ui.viewmodel.LoginViewModel
-import com.dc.todomvvmretrofitcoroutine.R
 import com.dc.todomvvmretrofitcoroutine.databinding.FragmentLoginBinding
+import com.dc.todomvvmretrofitcoroutine.ui.viewmodel.LoginViewModel
 import com.dc.todomvvmretrofitcoroutine.utils.*
 
 class LoginFragment : Fragment() {
@@ -21,7 +21,10 @@ class LoginFragment : Fragment() {
     private val viewModel: LoginViewModel by lazy {
         ViewModelProvider(
             this,
-            LoginViewModel.LoginViewModelFactory(LoginRepository(RetrofitClient.invokeWithOutAuth()),requireActivity().application)
+            LoginViewModel.ViewModelFactory(
+                LoginRepository.instance(RetrofitClient.invokeWithOutAuth()),
+                requireActivity().application
+            )
         ).get(LoginViewModel::class.java)
     }
 
@@ -54,23 +57,24 @@ class LoginFragment : Fragment() {
         binding.loginButton.setOnClickListener {
             val email = binding.email.text.toString().trim()
             val password = binding.password.text.toString().trim()
-            viewModel.login(email, password).observe(viewLifecycleOwner, Observer(this::handleState))
+            viewModel.login(email, password)
+                .observe(viewLifecycleOwner, Observer(this::handleState))
         }
     }
 
-    private fun handleState(state: LoginViewModel.LoginState) {
+    private fun handleState(state: LoginViewModel.State) {
         when (state) {
-            is LoginViewModel.LoginState.Loading -> setLoading(true)
-            is LoginViewModel.LoginState.Success -> {
+            is LoginViewModel.State.Loading -> setLoading(true)
+            is LoginViewModel.State.Success -> {
                 setLoading(false)
                 showToast(state.message)
                 requireActivity().nextFragment(R.id.action_loginFragment_to_todoListFragment)
             }
-            is LoginViewModel.LoginState.Error -> {
+            is LoginViewModel.State.Error -> {
                 setLoading(false)
                 showToast(state.message)
             }
-            is LoginViewModel.LoginState.ValidationError -> {
+            is LoginViewModel.State.ValidationError -> {
                 binding.emailLayout.error = state.emailError
                 binding.passwordLayout.error = state.passwordError
             }

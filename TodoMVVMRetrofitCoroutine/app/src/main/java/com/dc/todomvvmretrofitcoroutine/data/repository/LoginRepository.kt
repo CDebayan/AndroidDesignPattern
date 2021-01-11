@@ -6,8 +6,24 @@ import com.dc.todomvvmretrofitcoroutine.utils.checkConnectivityError
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.withContext
 
-class LoginRepository(private val apiService: ApiService) {
-    
+class LoginRepository() {
+    private lateinit var apiService: ApiService
+
+    private constructor(apiService: ApiService) : this() {
+        this.apiService = apiService
+    }
+
+    companion object {
+        private lateinit var loginRepository: LoginRepository
+
+        fun instance(apiService: ApiService): LoginRepository {
+            if (!::loginRepository.isInitialized) {
+                loginRepository = LoginRepository(apiService)
+            }
+            return loginRepository
+        }
+    }
+
     suspend fun userLogin(email: String, password: String): LoginModel {
         return withContext(IO) {
             try {

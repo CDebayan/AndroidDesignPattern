@@ -64,22 +64,6 @@ fun Context.clearToken() {
 
 }
 
-fun <T> Context.openActivity(
-    it: Class<T>,
-    clearTask: Boolean = false,
-    bundleKey: String = "",
-    bundle: Bundle? = null
-) {
-    val intent = Intent(this, it)
-    if (clearTask) {
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-    } else {
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-    }
-    intent.putExtra(bundleKey, bundle)
-    startActivity(intent)
-}
-
 fun Activity.nextFragment(id: Int, bundle: Bundle? = null) {
     Navigation.findNavController(this, R.id.hostFragment).navigate(id, bundle)
 }

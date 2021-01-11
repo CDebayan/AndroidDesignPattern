@@ -27,9 +27,9 @@ class LoginViewModel(private val loginRepository: LoginRepository, application: 
         }
 
         if (hasError) {
-            emit(LoginState.ValidationError(emailError, passwordError))
+            emit(State.ValidationError(emailError, passwordError))
         } else {
-            emit(LoginState.Loading)
+            emit(State.Loading)
 
             val loginResponse: LoginModel = loginRepository.userLogin(email, password)
             if (loginResponse.status == 1) {
@@ -37,27 +37,27 @@ class LoginViewModel(private val loginRepository: LoginRepository, application: 
                     getApplication<Application>().setToken(it)
                 }
                 loginResponse.message?.let {
-                    emit(LoginState.Success(it))
+                    emit(State.Success(it))
                 }
             } else {
                 loginResponse.message?.let {
-                    emit(LoginState.Error(it))
+                    emit(State.Error(it))
                 }
             }
         }
     }
 
-    sealed class LoginState {
-        object Loading : LoginState()
-        data class Success(val message: String) : LoginState()
+    sealed class State {
+        object Loading : State()
+        data class Success(val message: String) : State()
         data class ValidationError(val emailError: String?, val passwordError: String?) :
-            LoginState()
+            State()
 
-        data class Error(val message: String) : LoginState()
+        data class Error(val message: String) : State()
     }
 
     @Suppress("UNCHECKED_CAST")
-    class LoginViewModelFactory(private val loginRepository: LoginRepository, private val application: Application) :
+    class ViewModelFactory(private val loginRepository: LoginRepository, private val application: Application) :
         ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
             if (modelClass.isAssignableFrom(LoginViewModel::class.java)) {

@@ -22,7 +22,7 @@ interface ApiService {
     suspend fun addTodo(@Body todoModel: TodoModel): AddTodoModel
 
     @PUT("todo/updateTodo/{id}")
-    suspend fun updateTodo(@Path("id") todoId: Int,@Body todoModel: TodoModel): GeneralResponse
+    suspend fun updateTodo(@Path("id") todoId: Int, @Body todoModel: TodoModel): GeneralResponse
 
     @DELETE("todo/deleteTodo/{id}")
     suspend fun deleteTodo(@Path("id") todoId: Int): GeneralResponse

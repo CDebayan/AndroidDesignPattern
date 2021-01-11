@@ -16,7 +16,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 class TokenAuthenticator(private val context: Context) : Authenticator {
     override fun authenticate(route: Route?, response: Response): Request {
         val newToken = runBlocking {
-             getNewToken(context)
+            getNewToken(context)
         }
         return response.request.newBuilder()
             .header("Authorization", "Bearer $newToken")
@@ -24,8 +24,9 @@ class TokenAuthenticator(private val context: Context) : Authenticator {
     }
 
     private suspend fun getNewToken(context: Context): String {
-        val response : GeneralResponse =
-            Retrofit.Builder().baseUrl(RetrofitClient.BASE_URL).addConverterFactory(GsonConverterFactory.create())
+        val response: GeneralResponse =
+            Retrofit.Builder().baseUrl(RetrofitClient.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
                 .build()
                 .create(ApiService::class.java).refreshToken("Bearer ${context.getToken()}")
         context.setToken(response.message)
