@@ -17,7 +17,9 @@ import org.koin.android.viewmodel.ext.android.viewModel
 
 class TodoListFragment : BaseFragment() {
 
+    private lateinit var adapter: TodoListAdapter
     private lateinit var binding: FragmentTodoListBinding
+    private val todoList = mutableListOf<TodoModel>()
 
     private val viewModel by viewModel<TodoListViewModel>()
 
@@ -39,6 +41,7 @@ class TodoListFragment : BaseFragment() {
 
         onClickListener()
         observers()
+        setRecyclerView()
     }
 
     private fun onClickListener() {
@@ -58,7 +61,9 @@ class TodoListFragment : BaseFragment() {
 
     private fun observers() {
         viewModel.todoList.observe(viewLifecycleOwner, {
-            setRecyclerView(it)
+            todoList.clear()
+            todoList.addAll(it)
+            adapter.notifyDataSetChanged()
         })
         viewModel.todoListState.observe(viewLifecycleOwner, { state ->
             when (state) {
@@ -74,9 +79,9 @@ class TodoListFragment : BaseFragment() {
         })
     }
 
-    private fun setRecyclerView(todoList: List<TodoModel>) {
+    private fun setRecyclerView() {
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        binding.recyclerView.adapter = TodoListAdapter(todoList, object : ItemClickListener {
+        adapter = TodoListAdapter(todoList, object : ItemClickListener {
             override fun onItemClick(position: Int, option: String) {
                 if (option == "delete") {
                     deleteTodo(todoList[position].todoId)
@@ -86,6 +91,7 @@ class TodoListFragment : BaseFragment() {
                 }
             }
         })
+        binding.recyclerView.adapter = adapter
     }
 
     private fun updateTodo(todoModel: TodoModel) {

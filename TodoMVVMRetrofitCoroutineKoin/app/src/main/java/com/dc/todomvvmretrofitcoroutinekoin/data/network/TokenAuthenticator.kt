@@ -9,10 +9,8 @@ import okhttp3.Authenticator
 import okhttp3.Request
 import okhttp3.Response
 import okhttp3.Route
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
-class TokenAuthenticator(private val context: Context) : Authenticator {
+class TokenAuthenticator(private val context: Context,private val apiService: ApiService) : Authenticator {
     override fun authenticate(route: Route?, response: Response): Request {
         val newToken = runBlocking {
             getNewToken(context)
@@ -23,11 +21,7 @@ class TokenAuthenticator(private val context: Context) : Authenticator {
     }
 
     private suspend fun getNewToken(context: Context): String {
-        val response: GeneralResponse =
-            Retrofit.Builder().baseUrl(RetrofitClient.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build()
-                .create(ApiService::class.java).refreshToken("Bearer ${context.getToken()}")
+        val response: GeneralResponse = apiService.refreshToken("Bearer ${context.getToken()}")
         context.setToken(response.message)
         response.message?.let {
             return it
