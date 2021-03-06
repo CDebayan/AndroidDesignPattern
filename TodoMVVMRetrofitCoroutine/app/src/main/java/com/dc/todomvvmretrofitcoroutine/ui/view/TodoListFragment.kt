@@ -19,7 +19,7 @@ import com.dc.todomvvmretrofitcoroutine.utils.*
 class TodoListFragment : BaseFragment() {
 
     private lateinit var binding: FragmentTodoListBinding
-
+    private val adapter = TodoListAdapter()
     private val viewModel: TodoListViewModel by lazy {
         ViewModelProvider(
             this,
@@ -51,6 +51,7 @@ class TodoListFragment : BaseFragment() {
 
         onClickListener()
         observers()
+        setRecyclerView()
     }
 
     private fun onClickListener() {
@@ -70,7 +71,7 @@ class TodoListFragment : BaseFragment() {
 
     private fun observers() {
         viewModel.todoList.observe(viewLifecycleOwner, {
-            setRecyclerView(it)
+            adapter.submitList(it)
         })
         viewModel.todoListState.observe(viewLifecycleOwner, { state ->
             when (state) {
@@ -86,18 +87,21 @@ class TodoListFragment : BaseFragment() {
         })
     }
 
-    private fun setRecyclerView(todoList: List<TodoModel>) {
+    private fun setRecyclerView() {
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        binding.recyclerView.adapter = TodoListAdapter(todoList, object : ItemClickListener {
-            override fun onItemClick(position: Int, option: String) {
-                if (option == "delete") {
-                    deleteTodo(todoList[position].todoId)
-
-                } else if (option == "update") {
-                    updateTodo(todoList[position])
+        binding.recyclerView.adapter = adapter
+        adapter.setOnItemClickListener { data, option ->
+            when (option) {
+                RecyclerViewOption.Delete -> {
+                    deleteTodo(data.todoId)
+                }
+                RecyclerViewOption.Edit -> {
+                    updateTodo(data)
+                }
+                else -> {
                 }
             }
-        })
+        }
     }
 
     private fun updateTodo(todoModel: TodoModel) {
@@ -112,7 +116,7 @@ class TodoListFragment : BaseFragment() {
 
     private fun deleteTodo(todoId: Int?) {
         todoId?.let {
-            viewModel.deleteTodo(it).observe(this, { state ->
+            viewModel.deleteTodo(it).observe(viewLifecycleOwner, { state ->
                 when (state) {
                     is GeneralState.Loading -> showHideViews(showLoader = true, showRecycler = true)
                     is GeneralState.Error -> {
