@@ -33,7 +33,6 @@ class SplashFragment : Fragment() {
             } else {
                 requireActivity().nextFragment(R.id.action_splashFragment_to_loginFragment)
             }
-
         }
     }
 

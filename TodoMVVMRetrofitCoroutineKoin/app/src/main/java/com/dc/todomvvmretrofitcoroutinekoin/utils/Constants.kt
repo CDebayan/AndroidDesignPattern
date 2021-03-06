@@ -9,3 +9,10 @@ enum class RetrofitInstances {
     WithOutAuth,
     WithAuth
 }
+
+enum class RecyclerViewOption {
+    List,
+    Add,
+    Edit,
+    Delete
+}

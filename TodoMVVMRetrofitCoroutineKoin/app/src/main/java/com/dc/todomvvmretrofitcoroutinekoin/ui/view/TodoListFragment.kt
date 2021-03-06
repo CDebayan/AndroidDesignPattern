@@ -13,14 +13,14 @@ import com.dc.todomvvmretrofitcoroutinekoin.databinding.FragmentTodoListBinding
 import com.dc.todomvvmretrofitcoroutinekoin.ui.adapter.TodoListAdapter
 import com.dc.todomvvmretrofitcoroutinekoin.ui.viewmodel.TodoListViewModel
 import com.dc.todomvvmretrofitcoroutinekoin.utils.*
+import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class TodoListFragment : BaseFragment() {
 
-    private lateinit var adapter: TodoListAdapter
     private lateinit var binding: FragmentTodoListBinding
-    private val todoList = mutableListOf<TodoModel>()
 
+    private val  adapter: TodoListAdapter by inject()
     private val viewModel by viewModel<TodoListViewModel>()
 
     override fun getChildView(
@@ -61,9 +61,7 @@ class TodoListFragment : BaseFragment() {
 
     private fun observers() {
         viewModel.todoList.observe(viewLifecycleOwner, {
-            todoList.clear()
-            todoList.addAll(it)
-            adapter.notifyDataSetChanged()
+            adapter.submitList(it)
         })
         viewModel.todoListState.observe(viewLifecycleOwner, { state ->
             when (state) {
@@ -81,17 +79,18 @@ class TodoListFragment : BaseFragment() {
 
     private fun setRecyclerView() {
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        adapter = TodoListAdapter(todoList, object : ItemClickListener {
-            override fun onItemClick(position: Int, option: String) {
-                if (option == "delete") {
-                    deleteTodo(todoList[position].todoId)
-
-                } else if (option == "update") {
-                    updateTodo(todoList[position])
-                }
-            }
-        })
         binding.recyclerView.adapter = adapter
+        adapter.setOnItemClickListener { data, option ->
+            when (option) {
+                RecyclerViewOption.Delete -> {
+                    deleteTodo(data.todoId)
+                }
+                RecyclerViewOption.Edit -> {
+                    updateTodo(data)
+                }
+                else -> {}
+            }
+        }
     }
 
     private fun updateTodo(todoModel: TodoModel) {
@@ -106,7 +105,7 @@ class TodoListFragment : BaseFragment() {
 
     private fun deleteTodo(todoId: Int?) {
         todoId?.let {
-            viewModel.deleteTodo(it).observe(this, { state ->
+            viewModel.deleteTodo(it).observe(viewLifecycleOwner, { state ->
                 when (state) {
                     is GeneralState.Loading -> showHideViews(showLoader = true, showRecycler = true)
                     is GeneralState.Error -> {

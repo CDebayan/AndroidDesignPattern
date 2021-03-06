@@ -1,6 +1,7 @@
 package com.dc.todomvvmretrofitcoroutinekoin
 
 import android.app.Application
+import com.dc.todomvvmretrofitcoroutinekoin.di.adapterModule
 import com.dc.todomvvmretrofitcoroutinekoin.di.networkModule
 import com.dc.todomvvmretrofitcoroutinekoin.di.repositoryModule
 import com.dc.todomvvmretrofitcoroutinekoin.di.viewModelModule
@@ -18,6 +19,7 @@ class App: Application() {
                 networkModule,
                 viewModelModule,
                 repositoryModule,
+                adapterModule
             )
         }
     }

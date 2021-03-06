@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:usesCleartextTraffic="true"
         android:theme="@style/Theme.TodoMVVMRetrofitCoroutineKoin">
-        <activity android:name=".TodoMvvmRetrofitCoroutineKoinActivity">
+        <activity android:name=".TodoActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

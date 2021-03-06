@@ -18,7 +18,6 @@ import java.net.SocketTimeoutException
 import java.text.SimpleDateFormat
 import java.util.*
 
-
 fun Context.connectionCheck(): Boolean {
     val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

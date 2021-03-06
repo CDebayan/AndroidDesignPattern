@@ -121,7 +121,6 @@ class AddUpdateTodoViewModel(private val repository: TodoRepository) : ViewModel
             val dateTimeError: String?,
             val priorityError: String?,
         ) : State()
-
         data class Error(val message: String?) : State()
     }
 }
