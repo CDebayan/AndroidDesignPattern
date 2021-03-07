@@ -95,18 +95,26 @@ class AddUpdateTodoViewModel(private val repository: TodoRepository) : ViewModel
         if (title.isEmpty()) {
             hasError = true
             titleError = "Please enter title"
+        } else {
+            titleError = null
         }
         if (description.isEmpty()) {
             hasError = true
             descriptionError = "Please enter description"
+        } else {
+            descriptionError = null
         }
         if (dateTime.isEmpty()) {
             hasError = true
             dateTimeError = "Please enter date time"
+        } else {
+            dateTimeError = null
         }
         if (priority.isEmpty()) {
             hasError = true
             priorityError = "Please select priority"
+        } else {
+            priorityError = null
         }
         return hasError
     }
@@ -121,6 +129,7 @@ class AddUpdateTodoViewModel(private val repository: TodoRepository) : ViewModel
             val dateTimeError: String?,
             val priorityError: String?,
         ) : State()
+
         data class Error(val message: String?) : State()
     }
 }

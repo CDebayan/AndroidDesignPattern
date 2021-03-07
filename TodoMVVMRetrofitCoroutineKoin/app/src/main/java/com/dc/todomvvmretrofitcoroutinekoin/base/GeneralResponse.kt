@@ -1,4 +1,4 @@
-package com.dc.todomvvmretrofitcoroutinekoin.data.model
+package com.dc.todomvvmretrofitcoroutinekoin.base
 
 import com.google.gson.annotations.SerializedName
 

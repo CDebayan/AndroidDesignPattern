@@ -3,7 +3,7 @@ package com.dc.todomvvmretrofitcoroutinekoin.data.repository
 import android.os.Build
 import androidx.lifecycle.MutableLiveData
 import com.dc.todomvvmretrofitcoroutinekoin.data.model.AddTodoModel
-import com.dc.todomvvmretrofitcoroutinekoin.data.model.GeneralResponse
+import com.dc.todomvvmretrofitcoroutinekoin.base.GeneralResponse
 import com.dc.todomvvmretrofitcoroutinekoin.data.model.TodoListModel
 import com.dc.todomvvmretrofitcoroutinekoin.data.model.TodoModel
 import com.dc.todomvvmretrofitcoroutinekoin.data.network.ApiService

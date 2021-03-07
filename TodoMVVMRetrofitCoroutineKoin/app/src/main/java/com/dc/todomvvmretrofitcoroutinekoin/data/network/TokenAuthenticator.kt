@@ -1,7 +1,7 @@
 package com.dc.todomvvmretrofitcoroutinekoin.data.network
 
 import android.content.Context
-import com.dc.todomvvmretrofitcoroutinekoin.data.model.GeneralResponse
+import com.dc.todomvvmretrofitcoroutinekoin.base.GeneralResponse
 import com.dc.todomvvmretrofitcoroutinekoin.utils.getToken
 import com.dc.todomvvmretrofitcoroutinekoin.utils.setToken
 import kotlinx.coroutines.runBlocking

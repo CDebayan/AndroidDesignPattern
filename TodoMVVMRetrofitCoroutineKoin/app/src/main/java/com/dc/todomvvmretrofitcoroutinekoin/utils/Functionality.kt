@@ -12,7 +12,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import com.dc.todomvvmretrofitcoroutinekoin.R
-import com.dc.todomvvmretrofitcoroutinekoin.data.model.GeneralError
+import com.dc.todomvvmretrofitcoroutinekoin.base.GeneralError
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.text.SimpleDateFormat

@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.dc.todomvvmretrofitcoroutinekoin.base.GeneralState
-import com.dc.todomvvmretrofitcoroutinekoin.data.model.GeneralResponse
+import com.dc.todomvvmretrofitcoroutinekoin.base.GeneralResponse
 import com.dc.todomvvmretrofitcoroutinekoin.data.model.TodoModel
 import com.dc.todomvvmretrofitcoroutinekoin.data.repository.TodoRepository
 import kotlinx.coroutines.Dispatchers.IO

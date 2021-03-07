@@ -1,5 +1,6 @@
 package com.dc.todomvvmretrofitcoroutinekoin.data.network
 
+import com.dc.todomvvmretrofitcoroutinekoin.base.GeneralResponse
 import com.dc.todomvvmretrofitcoroutinekoin.data.model.*
 import retrofit2.http.*
 
