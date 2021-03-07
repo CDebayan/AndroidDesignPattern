@@ -7,7 +7,8 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dc.todomvvmretrofitcoroutine.R
-import com.dc.todomvvmretrofitcoroutine.data.model.ChildViewModel
+import com.dc.todomvvmretrofitcoroutine.base.BaseFragment
+import com.dc.todomvvmretrofitcoroutine.base.ChildView
 import com.dc.todomvvmretrofitcoroutine.data.model.TodoModel
 import com.dc.todomvvmretrofitcoroutine.data.network.RetrofitClient
 import com.dc.todomvvmretrofitcoroutine.data.repository.TodoRepository
@@ -37,9 +38,9 @@ class TodoListFragment : BaseFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): ChildViewModel {
+    ): ChildView {
         binding = FragmentTodoListBinding.inflate(inflater, container, false)
-        return ChildViewModel(
+        return ChildView(
             view = binding.root,
             title = "Todo",
             showBack = false

@@ -15,7 +15,7 @@
         android:theme="@style/Theme.TodoMVVMRetrofitCoroutine"
         android:usesCleartextTraffic="true"
         tools:ignore="AllowBackup">
-        <activity android:name=".TodoMvvmRetrofitCoroutineActivity">
+        <activity android:name=".TodoActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -1,8 +1,8 @@
-package com.dc.todomvvmretrofitcoroutine.data.model
+package com.dc.todomvvmretrofitcoroutine.base
 
 import android.view.View
 
-data class ChildViewModel(
+data class ChildView(
     val view: View,
     val title: String? = "",
     val showBack: Boolean = true,

@@ -1,4 +1,4 @@
-package com.dc.todomvvmretrofitcoroutine.ui.view
+package com.dc.todomvvmretrofitcoroutine.base
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.dc.todomvvmretrofitcoroutine.R
-import com.dc.todomvvmretrofitcoroutine.data.model.ChildViewModel
 import com.dc.todomvvmretrofitcoroutine.databinding.FragmentBaseBinding
 import com.dc.todomvvmretrofitcoroutine.utils.*
 
@@ -60,6 +59,6 @@ abstract class BaseFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): ChildViewModel
+    ): ChildView
 
 }

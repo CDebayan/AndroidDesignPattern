@@ -10,7 +10,8 @@ import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
 import com.dc.todomvvmretrofitcoroutine.R
-import com.dc.todomvvmretrofitcoroutine.data.model.ChildViewModel
+import com.dc.todomvvmretrofitcoroutine.base.BaseFragment
+import com.dc.todomvvmretrofitcoroutine.base.ChildView
 import com.dc.todomvvmretrofitcoroutine.data.model.TodoModel
 import com.dc.todomvvmretrofitcoroutine.data.network.RetrofitClient
 import com.dc.todomvvmretrofitcoroutine.data.repository.TodoRepository
@@ -50,25 +51,25 @@ class AddUpdateTodoFragment : BaseFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): ChildViewModel {
+    ): ChildView {
         binding = FragmentAddUpdateTodoBinding.inflate(inflater, container, false)
         return when (type) {
             "add" -> {
-                ChildViewModel(
+                ChildView(
                     view = binding.root,
                     title = "Add Todo",
                     showBack = true
                 )
             }
             "update" -> {
-                ChildViewModel(
+                ChildView(
                     view = binding.root,
                     title = "Update Todo",
                     showBack = true
                 )
             }
             else -> {
-                ChildViewModel(
+                ChildView(
                     view = binding.root,
                     title = "",
                     showBack = true
