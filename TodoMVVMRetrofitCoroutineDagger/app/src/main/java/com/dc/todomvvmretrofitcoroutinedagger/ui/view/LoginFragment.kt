@@ -8,9 +8,7 @@ import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import com.dc.todomvvmretrofitcoroutinedagger.R
-import com.dc.todomvvmretrofitcoroutinedagger.base.ViewModelProviderFactory
 import com.dc.todomvvmretrofitcoroutinedagger.databinding.FragmentLoginBinding
 import com.dc.todomvvmretrofitcoroutinedagger.ui.viewmodel.LoginViewModel
 import com.dc.todomvvmretrofitcoroutinedagger.utils.*
@@ -20,9 +18,9 @@ import javax.inject.Inject
 class LoginFragment : Fragment() {
     private lateinit var binding: FragmentLoginBinding
 
-    @Inject lateinit var providerFactory: ViewModelProviderFactory
+    //@Inject lateinit var providerFactory: ViewModelProviderFactory
 
-    private lateinit var viewModel: LoginViewModel
+    @Inject lateinit var viewModel: LoginViewModel
 
     override fun onAttach(context: Context) {
         AndroidSupportInjection.inject(this)
@@ -39,7 +37,7 @@ class LoginFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this, providerFactory).get(LoginViewModel::class.java)
+      //  viewModel = ViewModelProvider(this, providerFactory).get(LoginViewModel::class.java)
         setOnClickListener()
     }
 

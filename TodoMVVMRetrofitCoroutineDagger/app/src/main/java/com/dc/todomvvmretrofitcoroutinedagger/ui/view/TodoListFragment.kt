@@ -5,12 +5,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dc.todomvvmretrofitcoroutinedagger.R
 import com.dc.todomvvmretrofitcoroutinedagger.base.BaseFragment
 import com.dc.todomvvmretrofitcoroutinedagger.base.GeneralState
-import com.dc.todomvvmretrofitcoroutinedagger.base.ViewModelProviderFactory
 import com.dc.todomvvmretrofitcoroutinedagger.data.model.TodoModel
 import com.dc.todomvvmretrofitcoroutinedagger.databinding.FragmentTodoListBinding
 import com.dc.todomvvmretrofitcoroutinedagger.ui.adapter.TodoListAdapter
@@ -20,11 +18,12 @@ import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
 
 class TodoListFragment : BaseFragment() {
-    @Inject lateinit var providerFactory: ViewModelProviderFactory
-    private lateinit var viewModel: TodoListViewModel
+    //@Inject lateinit var providerFactory: ViewModelProviderFactory
+    @Inject lateinit var viewModel: TodoListViewModel
 
     private lateinit var binding: FragmentTodoListBinding
-    private val adapter = TodoListAdapter()
+    //private val adapter = TodoListAdapter()
+    @Inject lateinit var adapter: TodoListAdapter
 
     override fun getChildView(
         inflater: LayoutInflater,
@@ -46,7 +45,7 @@ class TodoListFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this, providerFactory).get(TodoListViewModel::class.java)
+       // viewModel = ViewModelProvider(this, providerFactory).get(TodoListViewModel::class.java)
         onClickListener()
         observers()
         setRecyclerView()

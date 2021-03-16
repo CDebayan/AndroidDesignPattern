@@ -9,10 +9,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
-import androidx.lifecycle.ViewModelProvider
 import com.dc.todomvvmretrofitcoroutinedagger.R
 import com.dc.todomvvmretrofitcoroutinedagger.base.BaseFragment
-import com.dc.todomvvmretrofitcoroutinedagger.base.ViewModelProviderFactory
 import com.dc.todomvvmretrofitcoroutinedagger.data.model.TodoModel
 import com.dc.todomvvmretrofitcoroutinedagger.databinding.FragmentAddUpdateTodoBinding
 import com.dc.todomvvmretrofitcoroutinedagger.ui.viewmodel.AddUpdateTodoViewModel
@@ -24,8 +22,7 @@ import java.util.*
 import javax.inject.Inject
 
 class AddUpdateTodoFragment : BaseFragment() {
-    @Inject
-    lateinit var providerFactory: ViewModelProviderFactory
+    //@Inject lateinit var providerFactory: ViewModelProviderFactory
 
     private var type: String? = ""
     private var todoId: Int? = null
@@ -33,12 +30,14 @@ class AddUpdateTodoFragment : BaseFragment() {
     private var selectedPriority: String = ""
     private var selectedDateTime: String = ""
 
-    private val viewModel: AddUpdateTodoViewModel by lazy {
-        ViewModelProvider(
-            this,
-            providerFactory
-        ).get(AddUpdateTodoViewModel::class.java)
-    }
+    @Inject
+    lateinit var viewModel: AddUpdateTodoViewModel
+//    private val viewModel: AddUpdateTodoViewModel by lazy {
+//        ViewModelProvider(
+//            this,
+//            providerFactory
+//        ).get(AddUpdateTodoViewModel::class.java)
+//    }
 
     override fun onAttach(context: Context) {
         AndroidSupportInjection.inject(this)

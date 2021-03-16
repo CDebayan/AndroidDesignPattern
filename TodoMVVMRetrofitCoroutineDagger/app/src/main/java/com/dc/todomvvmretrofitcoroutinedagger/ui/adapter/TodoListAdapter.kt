@@ -6,13 +6,14 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.dc.todomvvmretrofitcoroutinedagger.R
 import com.dc.todomvvmretrofitcoroutinedagger.data.model.TodoModel
+import com.dc.todomvvmretrofitcoroutinedagger.databinding.ChildTodoListBinding
 import com.dc.todomvvmretrofitcoroutinedagger.utils.RecyclerViewOption
 import com.dc.todomvvmretrofitcoroutinedagger.utils.convertDateTime
-import com.dc.todomvvmretrofitcoroutinedagger.R
-import com.dc.todomvvmretrofitcoroutinedagger.databinding.ChildTodoListBinding
+import javax.inject.Inject
 
-class TodoListAdapter : ListAdapter<TodoModel, TodoListAdapter.ViewHolder>(DiffCallBack) {
+class TodoListAdapter @Inject constructor() : ListAdapter<TodoModel, TodoListAdapter.ViewHolder>(DiffCallBack) {
     private var onItemClickListener: ((data: TodoModel, option: RecyclerViewOption) -> Unit)? = null
 
     fun setOnItemClickListener(listener: (data: TodoModel, option: RecyclerViewOption) -> Unit) {
